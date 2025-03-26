@@ -1,0 +1,32 @@
+services:
+  discovery:
+    build: .
+    command: python discovery_server.py
+    networks:
+      p2pnet:
+        ipv4_address: 172.28.0.2
+
+  client1:
+    build: .
+    command: python client.py
+    stdin_open: true
+    tty: true
+    networks:
+      p2pnet:
+        ipv4_address: 172.28.0.3
+
+  client2:
+    build: .
+    command: python client.py
+    stdin_open: true
+    tty: true
+    networks:
+      p2pnet:
+        ipv4_address: 172.28.0.4
+
+networks:
+  p2pnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
