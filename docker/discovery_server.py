@@ -8,7 +8,6 @@ PORT = 5000
 def handle_client(conn, addr):
     try:
         data = conn.recv(1024).decode().strip()
-        print("SERVER RECEIVED DATA:", data)
         parts = data.split()
         cmd = parts[0].upper()
         if cmd == "REGISTER":
