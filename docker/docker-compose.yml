@@ -1,16 +1,37 @@
+version: "3"
 services:
+  redis:
+    image: redis:latest
+    networks:
+      p2pnet:
+        ipv4_address: 172.28.0.5
+
   discovery:
     build: .
     command: python discovery_server.py
+    depends_on:
+      - redis
     networks:
       p2pnet:
         ipv4_address: 172.28.0.2
+
+  pubsub:
+    build: .
+    command: python pubsub_server.py
+    depends_on:
+      - redis
+    networks:
+      p2pnet:
+        ipv4_address: 172.28.0.6
 
   client1:
     build: .
     command: python client.py
     stdin_open: true
     tty: true
+    depends_on:
+      - discovery
+      - pubsub
     networks:
       p2pnet:
         ipv4_address: 172.28.0.3
@@ -20,6 +41,9 @@ services:
     command: python client.py
     stdin_open: true
     tty: true
+    depends_on:
+      - discovery
+      - pubsub
     networks:
       p2pnet:
         ipv4_address: 172.28.0.4
